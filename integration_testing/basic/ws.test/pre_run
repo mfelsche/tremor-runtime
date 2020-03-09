@@ -12,3 +12,4 @@ while ! netstat -an | grep 4242 2> /dev/null > /dev/null
 do
     sleep 1
 done
+sleep 1
