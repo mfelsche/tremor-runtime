@@ -427,8 +427,7 @@ mod test {
     }
 
     fn decode_magic(data: &[u8]) -> &'static str {
-        dbg!(&data.get(0..6));
-        match data.get(0..6) {
+        match dbg!(data.get(0..6)) {
             Some(&[0x1f, 0x8b, _, _, _, _]) => "gzip",
             Some(&[0x78, _, _, _, _, _]) => "zlib",
             Some(&[0xfd, b'7', b'z', _, _, _]) => "xz2",
