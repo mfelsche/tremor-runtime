@@ -250,10 +250,8 @@ fn main() -> Result<()> {
                 tremor_pipeline::Event {
                     id,
                     ingest_ns,
-                    origin_uri: None,
-                    is_batch: false,
-                    kind: None,
                     data: value.clone(),
+                    ..std::default::Default::default()
                 },
                 &mut continuation,
             )?;
