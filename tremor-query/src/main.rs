@@ -32,6 +32,7 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
 use tremor_pipeline::errors::{Error, ErrorKind, Result};
+use tremor_pipeline::Event;
 use tremor_script::highlighter::{Highlighter, Term as TermHighlighter};
 use tremor_script::path::load as load_module_path;
 use tremor_script::{
@@ -247,11 +248,11 @@ fn main() -> Result<()> {
             let ingest_ns = nanotime();
             execable.enqueue(
                 "in",
-                tremor_pipeline::Event {
+                Event {
                     id,
                     ingest_ns,
                     data: value.clone(),
-                    ..std::default::Default::default()
+                    ..Event::default()
                 },
                 &mut continuation,
             )?;
