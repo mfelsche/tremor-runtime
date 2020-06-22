@@ -218,7 +218,6 @@ async fn run_dun() -> Result<()> {
             .collect(),
     };
     if !query_files.is_empty() {
-        eprintln!("Reading the query files: {}", query_files.join(","));
         info!("Reading the query files: {}", query_files.join(","));
         for query_file in query_files {
             load_query_file(&world, &query_file).await?;
@@ -233,7 +232,6 @@ async fn run_dun() -> Result<()> {
             .collect(),
     };
     if !config_files.is_empty() {
-        eprintln!("Reading the config files: {}", config_files.join(","));
         info!("Reading the config files: {}", config_files.join(","));
         for config_file in config_files {
             load_file(&world, &config_file).await?;
