@@ -43,6 +43,7 @@ use std::fs::{self, File};
 use std::io::prelude::*;
 use std::io::{self, BufRead, BufReader};
 use std::path::Path;
+use tremor_pipeline::{Event, Ids};
 use tremor_runtime::{config, errors, functions as tr_fun, utils};
 use tremor_script::{grok, interpreter::AggrType, path::ModulePath, EventContext as Context};
 
@@ -320,7 +321,8 @@ fn pipe_run_cmd(_app: &TremorApp<'_>, cmd: &ArgMatches<'_>) -> Result<()> {
     let config = slurp(script)?;
     let runtime = tremor_runtime::incarnate(config)?;
     let pipeline = &runtime.pipes[0];
-    let mut flow = pipeline.to_executable_graph(tremor_pipeline::buildin_ops)?;
+    let mut uid = 0;
+    let mut flow = pipeline.to_executable_graph(&mut uid, tremor_pipeline::buildin_ops)?;
 
     let input: Box<dyn BufRead> = match cmd.value_of("DATA") {
         None => Box::new(BufReader::new(io::stdin())),
@@ -337,11 +339,11 @@ fn pipe_run_cmd(_app: &TremorApp<'_>, cmd: &ArgMatches<'_>) -> Result<()> {
         let mut eventset = Vec::new();
         flow.enqueue(
             "in1",
-            tremor_pipeline::Event {
-                id: num as u64,
+            Event {
+                id: Ids::new(0, num as u64),
                 ingest_ns: utils::nanotime(),
                 data,
-                ..tremor_pipeline::Event::default()
+                ..Event::default()
             },
             &mut eventset,
         )?;

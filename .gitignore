@@ -42,3 +42,4 @@ logger-*
 tremor.log
 docs
 /packaging/out/
+tremor-server.*
