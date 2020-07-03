@@ -62,6 +62,7 @@ pub(crate) mod ramp;
 pub mod registry;
 /// The tremor repository
 pub mod repository;
+pub(crate) mod source;
 /// Tremor runtime system
 pub mod system;
 /// Tremor URI
