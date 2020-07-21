@@ -42,7 +42,6 @@ mod args;
 use crate::errors::{Error, Result};
 use crate::system::World;
 use crate::url::TremorURL;
-use async_std::task;
 use human_panic::setup_panic;
 use std::fs::File;
 use std::io::BufReader;
@@ -52,7 +51,7 @@ use tremor_api as api;
 use tremor_pipeline::query::Query;
 use tremor_pipeline::FN_REGISTRY;
 use tremor_runtime::repository::{BindingArtefact, PipelineArtefact};
-use tremor_runtime::{self, config, errors, functions, metrics, system, url, version};
+use tremor_runtime::{self, config, errors, functions, metrics, system, url, version, QSIZE};
 
 #[cfg_attr(tarpaulin, skip)]
 async fn load_file(world: &World, file_name: &str) -> Result<usize> {
@@ -206,7 +205,7 @@ async fn run_dun() -> Result<()> {
         .value_of("storage-directory")
         .map(std::string::ToString::to_string);
     // TODO: Allow configuring this for offramps and pipelines
-    let (world, handle) = World::start(64, storage_directory).await?;
+    let (world, handle) = World::start(QSIZE, storage_directory).await?;
 
     // We load queries first since those are only pipelines.
     let query_files: Vec<String> = match matches.values_of("query") {
@@ -293,7 +292,8 @@ async fn run_dun() -> Result<()> {
 }
 
 #[cfg_attr(tarpaulin, skip)]
-fn main() {
+#[async_std::main]
+async fn main() -> std::io::Result<()> {
     // ALLOW: this is a handler, not a panic
     setup_panic!(Metadata {
         name: env!("CARGO_PKG_NAME").into(),
@@ -302,7 +302,7 @@ fn main() {
         homepage: "https://github.com/wayfair-tremor/tremor-runtime".into(),
     });
     version::print();
-    if let Err(ref e) = task::block_on(run_dun()) {
+    if let Err(ref e) = run_dun().await {
         error!("error: {}", e);
         eprintln!("error: {}", e);
         for e in e.iter().skip(1) {
@@ -320,4 +320,5 @@ fn main() {
         // ALLOW: main.rs
         ::std::process::exit(1);
     }
+    Ok(())
 }
