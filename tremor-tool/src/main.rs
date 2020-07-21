@@ -31,7 +31,6 @@ extern crate serde_derive;
 extern crate serde;
 
 use crate::errors::{Error, Result};
-use async_std::task;
 use clap::{load_yaml, ArgMatches};
 use halfbrown::HashMap;
 use http_types::{headers, StatusCode};
@@ -150,7 +149,13 @@ fn slurp(file: &str) -> Result<config::Config> {
     Ok(serde_yaml::from_reader(buffered_reader)?)
 }
 
-fn run(mut app: TremorApp) -> Result<()> {
+#[cfg_attr(tarpaulin, skip)]
+#[async_std::main]
+async fn main() -> Result<()> {
+    use clap::App;
+    let yaml = load_yaml!("./cli.yaml");
+    let app = App::from_yaml(yaml);
+    let mut app = TremorApp::try_new(&app)?;
     let cmd = app.app.clone();
     if let Some(matches) = cmd.subcommand_matches("script") {
         script_cmd(&mut app, &matches)
@@ -159,19 +164,10 @@ fn run(mut app: TremorApp) -> Result<()> {
     } else if let Some(matches) = cmd.subcommand_matches("pipe") {
         pipe_cmd(&app, &matches)
     } else if let Some(matches) = cmd.subcommand_matches("api") {
-        task::block_on(conductor_cmd(&mut app, &matches))
+        conductor_cmd(&mut app, &matches).await
     } else {
         usage(&app)
     }
-}
-
-#[cfg_attr(tarpaulin, skip)]
-fn main() -> Result<()> {
-    use clap::App;
-    let yaml = load_yaml!("./cli.yaml");
-    let app = App::from_yaml(yaml);
-    let app = TremorApp::try_new(&app)?;
-    run(app)
 }
 
 fn script_cmd(app: &mut TremorApp<'_>, cmd: &ArgMatches<'_>) -> Result<()> {

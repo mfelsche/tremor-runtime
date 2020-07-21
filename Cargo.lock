@@ -139,6 +139,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "async-attributes"
+version = "1.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "efd3d156917d94862e779f356c5acae312b08fd3121e792c857d7928c8088423"
+dependencies = [
+ "quote 1.0.7",
+ "syn 1.0.34",
+]
+
+[[package]]
 name = "async-channel"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -181,9 +191,9 @@ dependencies = [
 
 [[package]]
 name = "async-io"
-version = "0.1.11"
+version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ae22a338d28c75b53702b66f77979062cb29675db376d99e451af4fa79dedb3"
+checksum = "f4c982708a0344bfc72ea3de28719cb307336b5dd06a094263658d2154b83c24"
 dependencies = [
  "cfg-if",
  "concurrent-queue",
@@ -260,9 +270,7 @@ version = "1.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "46c8da367da62b8ff2313c406c9ac091c1b31d67a165becdd2de380d846260f7"
 dependencies = [
- "async-executor",
- "async-io",
- "async-mutex",
+ "async-attributes",
  "async-task",
  "blocking",
  "crossbeam-utils 0.7.2",
@@ -4055,9 +4063,9 @@ dependencies = [
 
 [[package]]
 name = "simd-json-derive"
-version = "0.1.9"
+version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "00783fbd8fc1271c32c926bafdc38a805aa74dd017e7b29ae3259b14e266709e"
+checksum = "8bf586e5c5237e1f147fcfee9bc3d64c56c77b5e86bcc6a288d494562639d7c1"
 dependencies = [
  "chrono",
  "itoa",
@@ -4069,9 +4077,9 @@ dependencies = [
 
 [[package]]
 name = "simd-json-derive-int"
-version = "0.1.1"
+version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "18c92e8da316acc608dd7bfb3176e95aa2894d9e4371cd252d249e192de1760b"
+checksum = "0a856a398b9f2417a36b6169a1a7237ad3de3354c5e3c0afb5419c9e8e230560"
 dependencies = [
  "proc-macro2",
  "quote 1.0.7",
@@ -4546,6 +4554,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "53953d2d3a5ad81d9f844a32f14ebb121f50b650cd59d0ee2a07cf13c617efed"
 
 [[package]]
+name = "tinyvec"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3d509a3e5acd065f0877e6db98d026d2900d57aa32abbb614a2cb959802c3ddf"
+
+[[package]]
 name = "tokio"
 version = "0.1.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5000,6 +5014,7 @@ dependencies = [
  "env_logger",
  "error-chain 0.12.4",
  "futures 0.3.5",
+ "futures-timer",
  "glob",
  "google-pubsub1",
  "google-storage1",
@@ -5038,6 +5053,7 @@ dependencies = [
  "snap",
  "surf",
  "tempfile",
+ "tinyvec 0.4.1",
  "tokio-postgres",
  "tremor-influx 0.1.0",
  "tremor-pipeline",
@@ -5220,7 +5236,7 @@ version = "0.1.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6fb19cf769fa8c6a80a162df694621ebeb4dafb606470b2b2fce0be40a98a977"
 dependencies = [
- "tinyvec",
+ "tinyvec 0.3.3",
 ]
 
 [[package]]
