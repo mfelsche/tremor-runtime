@@ -31,7 +31,7 @@ pub trait Preprocessor: Sync + Send {
 }
 
 // just a lookup
-#[cfg_attr(tarpaulin, skip)]
+
 pub fn lookup(name: &str) -> Result<Box<dyn Preprocessor>> {
     match name {
         // TODO once preprocessors allow configuration, remove multiple entries for lines here

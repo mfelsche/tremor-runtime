@@ -245,7 +245,6 @@ pub struct ExtractorError {
     pub msg: String,
 }
 
-#[cfg_attr(tarpaulin, skip)]
 impl fmt::Display for ExtractorError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.msg)

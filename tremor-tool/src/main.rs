@@ -149,7 +149,6 @@ fn slurp(file: &str) -> Result<config::Config> {
     Ok(serde_yaml::from_reader(buffered_reader)?)
 }
 
-#[cfg_attr(tarpaulin, skip)]
 #[async_std::main]
 async fn main() -> Result<()> {
     use clap::App;

@@ -26,7 +26,7 @@ pub trait Postprocessor: Send {
 }
 
 // just a lookup
-#[cfg_attr(tarpaulin, skip)]
+
 pub fn lookup(name: &str) -> Result<Box<dyn Postprocessor>> {
     match name {
         "lines" => Ok(Box::new(Lines::default())),

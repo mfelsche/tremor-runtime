@@ -53,7 +53,6 @@ use tremor_pipeline::FN_REGISTRY;
 use tremor_runtime::repository::{BindingArtefact, PipelineArtefact};
 use tremor_runtime::{self, config, errors, functions, metrics, system, url, version, QSIZE};
 
-#[cfg_attr(tarpaulin, skip)]
 async fn load_file(world: &World, file_name: &str) -> Result<usize> {
     info!("Loading configuration from {}", file_name);
     let mut count = 0;
@@ -107,7 +106,6 @@ async fn load_file(world: &World, file_name: &str) -> Result<usize> {
     Ok(count)
 }
 
-#[cfg_attr(tarpaulin, skip)]
 async fn load_query_file(world: &World, file_name: &str) -> Result<usize> {
     use std::ffi::OsStr;
     use std::io::Read;
@@ -159,7 +157,6 @@ fn fix_tide(r: api::Result<tide::Response>) -> tide::Result {
     })
 }
 
-#[cfg_attr(tarpaulin, skip)]
 #[allow(clippy::too_many_lines)]
 async fn run_dun() -> Result<()> {
     functions::load()?;
@@ -291,7 +288,6 @@ async fn run_dun() -> Result<()> {
     Ok(())
 }
 
-#[cfg_attr(tarpaulin, skip)]
 #[async_std::main]
 async fn main() -> std::io::Result<()> {
     // ALLOW: this is a handler, not a panic
