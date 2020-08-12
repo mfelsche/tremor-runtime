@@ -264,7 +264,7 @@ impl Extractor {
                 rule: rule_text.to_string(),
             },
             "base64" => Extractor::Base64,
-            "kv" => Extractor::Kv(kv::Pattern::compile(rule_text)?), //FIXME: How to handle different seperators?
+            "kv" => Extractor::Kv(kv::Pattern::compile(rule_text)?),
             "json" => Extractor::Json,
             "dissect" => Extractor::Dissect {
                 rule: rule_text.to_string(),
@@ -378,8 +378,7 @@ impl Extractor {
                     }
                 }
                 Self::Base64 => {
-                    let encoded = s.to_string();
-                    let decoded = base64::decode(&encoded)?;
+                    let decoded = base64::decode(s)?;
                     if !result_needed {
                         return Ok(Value::null());
                     }
@@ -391,9 +390,9 @@ impl Extractor {
                     })?))
                 }
                 Self::Json => {
-                    let mut s = s.to_string();
+                    let mut s = s.as_bytes().to_vec();
                     // We will never use s afterwards so it's OK to destroy it's content
-                    let encoded: &mut [u8] = unsafe { s.as_bytes_mut() };
+                    let encoded = s.as_mut_slice();
                     let decoded =
                         simd_json::to_owned_value(encoded).map_err(|_| ExtractorError {
                             msg: "Error in decoding to a json object".to_string(),
