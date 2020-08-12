@@ -530,24 +530,15 @@ where
         local: &'run LocalStack<'event>,
         expr: &'script Invoke,
     ) -> Result<Cow<'run, Value<'event>>> {
-        unsafe {
-            let v = stry!(eval_for_fn_arg(
-                opts,
-                env,
-                event,
-                state,
-                meta,
-                local,
-                expr.args.get_unchecked(0)
-            ));
-            expr.invocable
-                .invoke(env, &[v.borrow()])
-                .map(Cow::Owned)
-                .map_err(|e| {
-                    let r: Option<&Registry> = None;
-                    e.into_err(self, self, r, &env.meta)
-                })
-        }
+        let arg = unsafe { expr.args.get_unchecked(0) };
+        let v = stry!(eval_for_fn_arg(opts, env, event, state, meta, local, arg));
+        expr.invocable
+            .invoke(env, &[v.borrow()])
+            .map(Cow::Owned)
+            .map_err(|e| {
+                let r: Option<&Registry> = None;
+                e.into_err(self, self, r, &env.meta)
+            })
     }
 
     fn invoke2(
@@ -560,33 +551,16 @@ where
         local: &'run LocalStack<'event>,
         expr: &'script Invoke,
     ) -> Result<Cow<'run, Value<'event>>> {
-        unsafe {
-            let v1 = stry!(eval_for_fn_arg(
-                opts,
-                env,
-                event,
-                state,
-                meta,
-                local,
-                expr.args.get_unchecked(0)
-            ));
-            let v2 = stry!(eval_for_fn_arg(
-                opts,
-                env,
-                event,
-                state,
-                meta,
-                local,
-                expr.args.get_unchecked(1)
-            ));
-            expr.invocable
-                .invoke(env, &[v1.borrow(), v2.borrow()])
-                .map(Cow::Owned)
-                .map_err(|e| {
-                    let r: Option<&Registry> = None;
-                    e.into_err(self, self, r, &env.meta)
-                })
-        }
+        let arg = unsafe { (expr.args.get_unchecked(0), expr.args.get_unchecked(1)) };
+        let v1 = stry!(eval_for_fn_arg(opts, env, event, state, meta, local, arg.0));
+        let v2 = stry!(eval_for_fn_arg(opts, env, event, state, meta, local, arg.1));
+        expr.invocable
+            .invoke(env, &[v1.borrow(), v2.borrow()])
+            .map(Cow::Owned)
+            .map_err(|e| {
+                let r: Option<&Registry> = None;
+                e.into_err(self, self, r, &env.meta)
+            })
     }
 
     fn invoke3(
@@ -599,42 +573,24 @@ where
         local: &'run LocalStack<'event>,
         expr: &'script Invoke,
     ) -> Result<Cow<'run, Value<'event>>> {
-        unsafe {
-            let v1 = stry!(eval_for_fn_arg(
-                opts,
-                env,
-                event,
-                state,
-                meta,
-                local,
-                expr.args.get_unchecked(0)
-            ));
-            let v2 = stry!(eval_for_fn_arg(
-                opts,
-                env,
-                event,
-                state,
-                meta,
-                local,
-                expr.args.get_unchecked(1)
-            ));
-            let v3 = stry!(eval_for_fn_arg(
-                opts,
-                env,
-                event,
-                state,
-                meta,
-                local,
-                expr.args.get_unchecked(2)
-            ));
-            expr.invocable
-                .invoke(env, &[v1.borrow(), v2.borrow(), v3.borrow()])
-                .map(Cow::Owned)
-                .map_err(|e| {
-                    let r: Option<&Registry> = None;
-                    e.into_err(self, self, r, &env.meta)
-                })
-        }
+        let arg = unsafe {
+            (
+                expr.args.get_unchecked(0),
+                expr.args.get_unchecked(1),
+                expr.args.get_unchecked(2),
+            )
+        };
+
+        let v1 = stry!(eval_for_fn_arg(opts, env, event, state, meta, local, arg.0));
+        let v2 = stry!(eval_for_fn_arg(opts, env, event, state, meta, local, arg.1));
+        let v3 = stry!(eval_for_fn_arg(opts, env, event, state, meta, local, arg.2));
+        expr.invocable
+            .invoke(env, &[v1.borrow(), v2.borrow(), v3.borrow()])
+            .map(Cow::Owned)
+            .map_err(|e| {
+                let r: Option<&Registry> = None;
+                e.into_err(self, self, r, &env.meta)
+            })
     }
 
     fn invoke(
@@ -681,15 +637,13 @@ where
             );
         }
 
-        unsafe {
-            let invocable: &mut TremorAggrFnWrapper =
-                mem::transmute(&env.aggrs[expr.aggr_id].invocable);
-            let r = invocable.emit().map(Cow::Owned).map_err(|e| {
-                let r: Option<&Registry> = None;
-                e.into_err(self, self, r, &env.meta)
-            })?;
-            Ok(r)
-        }
+        let invocable: &mut TremorAggrFnWrapper =
+            unsafe { mem::transmute(&env.aggrs[expr.aggr_id].invocable) };
+        let r = invocable.emit().map(Cow::Owned).map_err(|e| {
+            let r: Option<&Registry> = None;
+            e.into_err(self, self, r, &env.meta)
+        })?;
+        Ok(r)
     }
 
     fn patch(
