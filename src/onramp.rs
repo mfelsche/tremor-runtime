@@ -165,14 +165,6 @@ mod test {
     use std::net::UdpSocket;
     use std::ops::Range;
 
-    #[allow(dead_code)]
-    fn port_is_taken(port: u16) -> bool {
-        match TcpListener::bind(format!("127.0.0.1:{}", port)) {
-            Ok(_) => false,
-            _ => true,
-        }
-    }
-
     fn port_is_free(port: u16) -> bool {
         match TcpListener::bind(format!("127.0.0.1:{}", port)) {
             Ok(_x) => {
@@ -188,25 +180,6 @@ mod test {
 
     fn find_free_port(mut range: Range<u16>) -> Option<u16> {
         range.find(|port| port_is_free(*port))
-    }
-
-    #[allow(dead_code)]
-    struct TcpRecorder {
-        port: u16,
-        listener: TcpListener,
-    }
-
-    impl TcpRecorder {
-        #[allow(dead_code)]
-        fn new() -> Self {
-            let port = find_free_port(9000..10000).expect("could not find free port");
-            dbg!(&port);
-            TcpRecorder {
-                port,
-                listener: TcpListener::bind(format!("localhost:{}", port))
-                    .expect("could not bind listener"),
-            }
-        }
     }
 
     struct TcpInjector {
@@ -326,13 +299,12 @@ links:
         };
     }
 
-    #[allow(unused_macros)] // KEEP Useful for developing tests
-    macro_rules! rampercize_with_logs {
-        ($onramp_config:expr, $offramp_config:expr, $test:tt) => {
-            env_logger::init();
-            rampercize!($onramp_config, $offramp_config, $test)
-        };
-    }
+    // macro_rules! rampercize_with_logs {
+    //     ($onramp_config:expr, $offramp_config:expr, $test:tt) => {
+    //         env_logger::init();
+    //         rampercize!($onramp_config, $offramp_config, $test)
+    //     };
+    // }
 
     #[async_std::test]
     async fn tcp_onramp() -> Result<()> {

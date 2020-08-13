@@ -87,7 +87,6 @@ pub type FResult<T> = std::result::Result<T, FunctionError>;
 
 /// Creates a new function registry and inserts some placeholder
 /// functions.
-#[allow(unused_variables)]
 pub fn registry() -> Registry {
     let mut registry = Registry::default();
 
@@ -107,7 +106,6 @@ pub fn registry() -> Registry {
 }
 
 /// Creates a new aggregate function registry
-#[allow(unused_variables)]
 pub fn aggr() -> Aggr {
     let mut registry = Aggr::default();
     crate::std_lib::load_aggr(&mut registry);
