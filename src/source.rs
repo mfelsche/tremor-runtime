@@ -172,10 +172,8 @@ where
 
     async fn handle_pipelines(&mut self) -> Result<bool> {
         loop {
-            let msg = if self.pipelines.is_empty() || self.triggered {
+            let msg = if self.pipelines.is_empty() || self.triggered || !self.rx.is_empty() {
                 self.rx.recv().await?
-            } else if let Ok(msg) = self.rx.try_recv() {
-                msg
             } else {
                 return Ok(false);
             };
