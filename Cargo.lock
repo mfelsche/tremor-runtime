@@ -4014,6 +4014,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "syslog_loose"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0c95cb86c546db186ecbf2d2b6c3515e4dfc080212acfd28e812c1056d809aa4"
+dependencies = [
+ "chrono",
+ "nom 5.1.2",
+]
+
+[[package]]
 name = "tempfile"
 version = "3.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4635,6 +4645,7 @@ dependencies = [
  "smol",
  "snap",
  "surf",
+ "syslog_loose",
  "tempfile",
  "tokio-postgres",
  "tremor-influx 0.1.0",

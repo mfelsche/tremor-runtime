@@ -1203,6 +1203,7 @@ pub struct Lexer<'input> {
     chars: CharLocations<'input>,
     start_index: BytePos,
     file_offset: Location,
+    /// id of the current compilation unit
     cu: usize,
     stored_tokens: VecDeque<TokenSpan<'input>>,
 }

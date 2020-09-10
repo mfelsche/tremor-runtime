@@ -23,6 +23,7 @@ pub(crate) mod null;
 pub(crate) mod statsd;
 pub(crate) mod string;
 pub(crate) mod yaml;
+pub(crate) mod syslog;
 
 mod prelude {
     pub use super::Codec;
@@ -67,6 +68,7 @@ pub fn lookup(name: &str) -> Result<Box<dyn Codec>> {
         "null" => Ok(Box::new(null::Null {})),
         "string" => Ok(Box::new(string::String {})),
         "statsd" => Ok(Box::new(statsd::StatsD {})),
+        "syslog" => Ok(Box::new(syslog::Syslog {])),
         "yaml" => Ok(Box::new(yaml::YAML {})),
         _ => Err(format!("Codec '{}' not found.", name).into()),
     }

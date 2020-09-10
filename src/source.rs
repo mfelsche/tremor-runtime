@@ -62,6 +62,7 @@ pub(crate) enum SourceReply {
     StartStream(usize),
     EndStream(usize),
     StateChange(SourceState),
+    /// denotes after how many millis to ask this source again for data
     Empty(u64),
 }
 
@@ -75,6 +76,7 @@ pub(crate) trait Source {
     fn restore_breaker(&mut self) {}
     fn ack(&mut self, id: u64) {}
     fn fail(&mut self, id: u64) {}
+    /// can this source handle ack/fail events
     fn is_transactional(&self) -> bool {
         false
     }
@@ -356,6 +358,8 @@ where
 
     async fn run(mut self) -> Result<()> {
         loop {
+            // If handle_pipelines returns ture the last pipeline was disconnected and we can
+            // terminate the source
             if self.handle_pipelines().await? {
                 return Ok(());
             }

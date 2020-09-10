@@ -36,9 +36,11 @@ pub(crate) type ResultVec = Result<Option<Vec<Event>>>;
 
 #[async_trait::async_trait]
 pub(crate) trait Sink {
+    // returned events flow backwards through the connected pipeline
     async fn on_event(&mut self, input: &str, codec: &dyn Codec, event: Event) -> ResultVec;
     async fn init(&mut self, postprocessors: &[String]) -> Result<()>;
 
+    // returned events flow backwards through the connected pipeline
     async fn on_signal(&mut self, signal: Event) -> ResultVec;
 
     fn is_active(&self) -> bool;

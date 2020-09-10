@@ -30,7 +30,7 @@ pub struct Location {
     pub line: usize,
     /// The Column
     pub column: usize,
-    /// Absolute location in bytes starting from 0
+    /// Absolute location in chars starting from 0
     pub absolute: usize,
 }
 
